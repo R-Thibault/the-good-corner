@@ -1,0 +1,48 @@
+GET http://localhost:3000/ads
+
+###
+
+GET http://localhost:3000/ads/search?title=boa
+
+###
+
+GET http://localhost:3000/ads?location=Lyon
+
+###
+
+GET http://localhost:3000/ads?loc
+
+###
+
+GET http://localhost:3000/ads/19
+
+###
+
+POST http://localhost:3000/ads
+Content-Type: application/json
+
+{
+
+  "title": "boat to sell",
+  "description": "YOLOlolo",
+  "owner": "bike.seller@gmail.com",
+  "location": "Paris",
+  "price": 150,
+  "category": 1,
+  "tags": 2
+}
+
+###
+
+DELETE http://localhost:3000/ads/12
+
+###
+
+PATCH http://localhost:3000/ads/11
+Content-Type: application/json
+
+{
+  
+  "category": 3,
+  "tags":2
+}

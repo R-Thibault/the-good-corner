@@ -1,0 +1,23 @@
+GET http://localhost:3000/tags
+
+###
+
+POST http://localhost:3000/tags
+Content-Type: application/json
+
+{
+  "name": "sweet" 
+}
+
+###
+
+DELETE http://localhost:3000/tags/5
+
+###
+
+PATCH http://localhost:3000/tags/3
+Content-Type: application/json
+
+{
+ "name": "Vélo"
+}

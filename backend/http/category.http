@@ -1,0 +1,35 @@
+GET http://localhost:3000/categories
+
+###
+
+GET http://localhost:3000/categories?name=voit
+
+###
+
+GET http://localhost:3000/categories?city=Lyon
+
+###
+
+GET http://localhost:3000/categories?grpBy
+
+###
+
+POST http://localhost:3000/categories
+Content-Type: application/json
+
+{
+  "name": "maison" 
+}
+
+###
+
+DELETE http://localhost:3000/categories/5
+
+###
+
+PATCH http://localhost:3000/categories/3
+Content-Type: application/json
+
+{
+ "name": "Vélo"
+}
