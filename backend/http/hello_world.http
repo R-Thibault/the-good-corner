@@ -28,8 +28,8 @@ Content-Type: application/json
   "owner": "bike.seller@gmail.com",
   "location": "Paris",
   "price": 150,
-  "category": 1,
-  "tags": [{ "id": 1 }]
+  "category": { "id": 1 },
+  "tags": [{ "id": 1 }, { "id": 2 }]
 }
 
 ###
