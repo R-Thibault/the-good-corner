@@ -29,7 +29,7 @@ Content-Type: application/json
   "location": "Paris",
   "price": 150,
   "category": 1,
-  "tags": 2
+  "tags": [{ "id": 1 }]
 }
 
 ###
@@ -38,11 +38,11 @@ DELETE http://localhost:3000/ads/12
 
 ###
 
-PATCH http://localhost:3000/ads/11
+PATCH http://localhost:3000/ads/1
 Content-Type: application/json
 
 {
   
   "category": 3,
-  "tags":2
+  "tags": [{ "id": 2 }]
 }

@@ -8,7 +8,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-
+import { Length } from "class-validator";
 import { Ad } from "./Ad";
 
 @Entity()
@@ -16,7 +16,8 @@ export class Tag extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: "varchar", length: 100 })
+  @Column({ length: 100 })
+  @Length(3, 100)
   name!: string;
 
   @Column()

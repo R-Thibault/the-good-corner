@@ -11,13 +11,13 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:3000/tags/5
+DELETE http://localhost:3000/tags/4
 
 ###
 
-PATCH http://localhost:3000/tags/3
+PATCH http://localhost:3000/tags/2
 Content-Type: application/json
 
 {
- "name": "Vélo"
+ "name": "maison"
 }

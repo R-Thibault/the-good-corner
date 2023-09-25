@@ -2,12 +2,10 @@ import { Controller } from ".";
 import { Request, Response } from "express";
 import { Ad } from "../entities/Ad";
 import { validate } from "class-validator";
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
 import { Like } from "typeorm";
 
-export class AdsController implements Controller {
-  async getAll(req: Request, res: Response) {
+export class AdsController extends Controller {
+  getAll = async (req: Request, res: Response) => {
     try {
       const ads = await Ad.find({
         relations: {
@@ -20,9 +18,9 @@ export class AdsController implements Controller {
       console.log(err);
       res.status(404).send("Not Found");
     }
-  }
+  };
 
-  async getOne(req: Request, res: Response) {
+  getOne = async (req: Request, res: Response) => {
     try {
       const ad = await Ad.find({
         relations: {
@@ -36,9 +34,9 @@ export class AdsController implements Controller {
       console.error(err);
       res.status(500).send();
     }
-  }
+  };
 
-  async createOne(req: Request, res: Response) {
+  createOne = async (req: Request, res: Response) => {
     try {
       const newAd = new Ad();
       newAd.title = req.body.title;
@@ -59,9 +57,9 @@ export class AdsController implements Controller {
       console.log(err);
       res.status(404).send("Not Found");
     }
-  }
+  };
 
-  async deleteOne(req: Request, res: Response) {
+  deleteOne = async (req: Request, res: Response) => {
     try {
       const ad = await Ad.findOne({ where: { id: Number(req.params.id) } });
       if (ad) {
@@ -75,9 +73,9 @@ export class AdsController implements Controller {
       console.error(err);
       res.status(500).send();
     }
-  }
+  };
 
-  async patchOne(req: Request, res: Response) {
+  patchOne = async (req: Request, res: Response) => {
     try {
       const ad = await Ad.findOne({ where: { id: Number(req.params.id) } });
 
@@ -98,9 +96,9 @@ export class AdsController implements Controller {
       console.error(err);
       res.status(500).send();
     }
-  }
+  };
 
-  async searchWithFilter(req: Request, res: Response): Promise<void> {
+  searchWithFilter = async (req: Request, res: Response): Promise<void> => {
     const allowedFields = ["title", "location"];
     // console.log(req);
     if (req.query.title) {
@@ -140,5 +138,5 @@ export class AdsController implements Controller {
     } else if (Object.keys(req.query) !== allowedFields && !req.query) {
       res.status(404).send("Not Found");
     }
-  }
+  };
 }

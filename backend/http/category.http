@@ -27,9 +27,9 @@ DELETE http://localhost:3000/categories/5
 
 ###
 
-PATCH http://localhost:3000/categories/3
+PATCH http://localhost:3000/categories/2
 Content-Type: application/json
 
 {
- "name": "Vélo"
+ "name": "Pommes"
 }

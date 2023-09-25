@@ -15,7 +15,8 @@ export class Category extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: "varchar", length: 100 })
+  @Column({ length: 100 })
+  @Length(3, 100)
   name!: string;
 
   @Column()

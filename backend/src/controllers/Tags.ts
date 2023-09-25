@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 import { Tag } from "../entities/Tag";
 import { validate } from "class-validator";
 
-export class TagsController implements Controller {
-  async getAll(req: Request, res: Response) {
+export class TagsController extends Controller {
+  getAll = async (req: Request, res: Response) => {
     try {
       const tags = await Tag.find();
       res.status(200).send(tags);
@@ -12,9 +12,9 @@ export class TagsController implements Controller {
       console.log(err);
       res.status(404).send("Not Found");
     }
-  }
+  };
 
-  async getOne(req: Request, res: Response) {
+  getOne = async (req: Request, res: Response) => {
     try {
       const tag = await Tag.findOne({
         where: { id: Number(req.params.id) },
@@ -24,9 +24,9 @@ export class TagsController implements Controller {
       console.error(err);
       res.status(500).send();
     }
-  }
+  };
 
-  async createOne(req: Request, res: Response) {
+  createOne = async (req: Request, res: Response) => {
     try {
       const newTag = new Tag();
       newTag.name = req.body.name;
@@ -42,9 +42,9 @@ export class TagsController implements Controller {
       console.error(err);
       res.status(500).send();
     }
-  }
+  };
 
-  async deleteOne(req: Request, res: Response) {
+  deleteOne = async (req: Request, res: Response) => {
     try {
       const tag = await Tag.findOne({
         where: { id: Number(req.params.id) },
@@ -60,9 +60,9 @@ export class TagsController implements Controller {
       console.error(err);
       res.status(500).send();
     }
-  }
+  };
 
-  async patchOne(req: Request, res: Response) {
+  patchOne = async (req: Request, res: Response) => {
     try {
       const tag = await Tag.findOne({
         where: { id: Number(req.params.id) },
@@ -84,5 +84,5 @@ export class TagsController implements Controller {
       console.error(err);
       res.status(500).send();
     }
-  }
+  };
 }
