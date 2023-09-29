@@ -26,6 +26,7 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
 
   useEffect(() => {
     // mounting
+
     fetchAds();
   }, [props.categoryId]);
 
@@ -44,6 +45,7 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
               imgUrl={item.imgUrl}
               link={`/ads/${item.id}`}
               onDelete={fetchAds}
+              editLink={`/ads/${item.id}/edit`}
             />
           </div>
         ))}

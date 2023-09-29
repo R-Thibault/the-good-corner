@@ -9,6 +9,7 @@ export type AdType = {
   title: string;
   description: string;
   price: number;
+  editLink?: string;
 };
 
 export type AdCardProps = AdType & {
@@ -22,6 +23,7 @@ export function AdCard(props: AdCardProps): React.ReactNode {
       props.onDelete();
     }
   }
+
   return (
     <div className={styles.adCardContainer}>
       <article>
@@ -37,9 +39,9 @@ export function AdCard(props: AdCardProps): React.ReactNode {
             <div>{props.price} €</div>
           </div>
           <div>
-            <a href={props.link}>
+            <a href={props.link} className={styles.btnDetails}>
               Details
-              <svg
+              {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className={styles.icon}
                 viewBox="0 0 20 20"
@@ -50,10 +52,15 @@ export function AdCard(props: AdCardProps): React.ReactNode {
                   d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
                   clip-rule="evenodd"
                 />
-              </svg>
+              </svg> */}
             </a>
+
+            <a href={props.editLink} className={styles.btnPatch}>
+              Modifier
+            </a>
+
             {props.onDelete && (
-              <button onClick={deleteAd} className={styles.BtnDelete}>
+              <button onClick={deleteAd} className={styles.btnDelete}>
                 Supprimer
               </button>
             )}

@@ -78,6 +78,29 @@
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 }
 
+.btnDetails {
+  z-index: 1;
+  margin: 10px;
+  padding: 6px;
+  background-color: green;
+  border-radius: 10px;
+  text-decoration: white;
+}
+
 .btnDelete {
   z-index: 1;
+  margin: 10px;
+  padding: 6px;
+  background-color: red;
+  border-radius: 10px;
+  color: white;
+}
+
+.btnPatch {
+  z-index: 1;
+
+  padding: 6px;
+  background-color: orange;
+  border-radius: 10px;
+  color: black;
 }

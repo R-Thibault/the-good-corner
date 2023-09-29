@@ -1,0 +1,151 @@
+POST http://localhost:5000/categories/many
+Content-Type: application/json
+
+[
+  {
+  "name": "Loisir" 
+},
+  {
+  "name": "Maison" 
+},
+{
+  "name": "Sport" 
+},
+  {
+  "name": "Voyage" 
+},
+  {
+  "name": "Mode" 
+},
+  {
+  "name": "Bricolage" 
+}
+]
+
+###
+POST http://localhost:5000/tags/many
+Content-Type: application/json
+
+[
+  {
+  "name": "orange" 
+},
+  {
+  "name": "bleu" 
+},
+{
+  "name": "BlingBling" 
+},
+  {
+  "name": "Yolo" 
+}
+
+]
+
+###
+
+POST http://localhost:5000/ads/many
+Content-Type: application/json
+
+[
+{ 
+   "title": "plane to sell",
+  "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+  "author": "rike.seller@gmail.com",
+  "imgUrl" : "https://cdn.pixabay.com/photo/2017/09/28/13/38/double-decker-2795557_1280.jpg",
+  "location": "Bordeaux", 
+  "price":875,
+  "category": { "id": 1 },
+  "tags": [{ "id": 2 }, { "id": 3 }]
+  },
+  { 
+   "title": "Car to sell",
+  "description": "Sit amet risus nullam eget felis. Ipsum dolor sit amet consectetur adipiscing elit duis tristique.",
+  "author": "brike.seller@gmail.com",
+  "imgUrl" : "https://cdn.pixabay.com/photo/2016/02/13/13/11/oldtimer-1197800_640.jpg",
+  "location": "Lyon", 
+  "price":412,
+  "category": { "id": 2 },
+  "tags": [{ "id": 1 }]
+  },
+  { 
+   "title": "Bike to sell",
+  "description": "Feugiat in fermentum posuere urna nec tincidunt praesent semper. Sapien et ligula ullamcorper malesuada proin libero nunc consequat.",
+  "author": "vike.seller@gmail.com",
+  "imgUrl" : "https://cdn.pixabay.com/photo/2017/12/28/16/18/bicycle-3045580_640.jpg",
+  "location": "Paris", 
+  "price":456,
+  "category": { "id": 4 },
+  "tags": [{ "id": 4 }, { "id": 3 }]
+  },
+  { 
+   "title": "Big Boat",
+  "description": "Euismod elementum nisi quis eleifend quam adipiscing. ",
+  "author": "sam.seller@gmail.com",
+  "imgUrl" : "https://cdn.pixabay.com/photo/2015/03/16/10/59/sunset-675847_640.jpg",
+  "location": "Bordeaux", 
+  "price":363,
+  "category": { "id": 3 },
+  "tags": [{ "id": 2 }]
+  },
+  { 
+   "title": "Jeans !",
+  "description": "A erat nam at lectus urna duis convallis convallis.",
+  "author": "luke.seller@gmail.com",
+  "imgUrl" : "https://cdn.pixabay.com/photo/2014/08/26/21/49/jeans-428614_640.jpg",
+  "location": "Paris", 
+  "price":780,
+  "category": { "id": 5 },
+  "tags": [{ "id": 3 }]
+  },
+  { 
+   "title": "BaseBall Bat !",
+  "description": "Cursus turpis massa tincidunt dui ut ornare lectus.",
+  "author": "jane.seller@gmail.com",
+  "imgUrl" : "https://cdn.pixabay.com/photo/2016/09/05/10/02/baseball-1646091_640.jpg",
+  "location": "Lyon", 
+  "price":10,
+  "category": { "id": 6},
+  "tags": [{ "id": 4 }, { "id": 3 }]
+  },
+  { 
+   "title": "Duckyys !",
+  "description": "Id consectetur purus ut faucibus pulvinar elementum integer. ",
+  "author": "lisa.seller@gmail.com",
+  "imgUrl" : "https://cdn.pixabay.com/photo/2016/07/14/21/33/bath-1517727_640.jpg",
+  "location": "Bordeaux", 
+  "price":30,
+  "category": { "id": 1 },
+  "tags": [{ "id": 2 }, { "id": 1 }]
+  },
+  { 
+   "title": "Tee-shirts",
+  "description": "Egestas sed sed risus pretium quam vulputate dignissim suspendisse.",
+  "author": "max.seller@gmail.com",
+  "imgUrl" : "https://cdn.pixabay.com/photo/2016/07/17/20/19/t-shirt-1524677_640.jpg",
+  "location": "Lyon", 
+  "price":50,
+  "category": { "id": 3 },
+  "tags": [{ "id": 1 }, { "id": 4 }]
+  },
+  { 
+   "title": "Perceuse",
+  "description": "Adipiscing elit ut aliquam purus. Ultrices tincidunt arcu non sodales neque sodales ut etiam sit.",
+  "author": "anissa.seller@gmail.com",
+  "imgUrl" : "https://cdn.pixabay.com/photo/2015/11/11/12/26/drill-1038542_640.jpg",
+  "location": "Bordeaux", 
+  "price":100,
+  "category": { "id": 4 },
+  "tags": [{ "id": 4 }]
+  },
+  { 
+   "title": "Je vends la Bretagne",
+  "description": "Sagittis vitae et leo duis ut diam quam. Vitae elementum curabitur vitae nunc sed velit.",
+  "author": "julie.seller@gmail.com",
+  "imgUrl" : "https://cdn.pixabay.com/photo/2012/04/11/15/19/brittany-28462_640.png",
+  "location": "Nantes", 
+  "price":2,
+  "category": { "id": 2 },
+  "tags": [{ "id": 2 }, { "id": 4 }]
+  }
+]

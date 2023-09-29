@@ -6,7 +6,7 @@ GET http://localhost:5000/ads/search?title=boa
 
 ###
 
-GET http://localhost:5000/ads?categoryId=1
+GET http://localhost:5000/ads?categoryIn=1
 
 ###
 
@@ -29,7 +29,7 @@ Content-Type: application/json
   "imgUrl" : "https://cdn.pixabay.com/photo/2017/09/28/13/38/double-decker-2795557_1280.jpg",
   "location": "Paris", 
   "price": 150,
-  "category": { "id": 2 },
+  "category": { "id": 3 },
   "tags": [{ "id": 2 }, { "id": 3 }]
 }
 

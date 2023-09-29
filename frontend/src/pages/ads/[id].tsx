@@ -37,6 +37,7 @@ export default function Ad() {
               price={ad.price}
               imgUrl={ad.imgUrl}
               link={""}
+              onDelete={fetchAd}
             />
           </>
         ) : adId ? (

@@ -5,6 +5,7 @@ import { dataSource } from "./datasource";
 import { AdsController } from "./controllers/Ads";
 import { CategoriesController } from "./controllers/Categories";
 import { TagsController } from "./controllers/Tags";
+import { DataFixturesController } from "./controllers/DataFixtures";
 
 const app = express();
 const port = 5000;
@@ -37,6 +38,12 @@ app.get("/tags/:id", tagsController.getOne);
 app.post("/tags", tagsController.createOne);
 app.delete("/tags/:id", tagsController.deleteOne);
 app.patch("/tags/:id", tagsController.patchOne);
+
+//Data Fixtures
+const dataFixturesController = new DataFixturesController();
+app.post("/categories/many", dataFixturesController.createCategories);
+app.post("/tags/many", dataFixturesController.createTags);
+app.post("/ads/many", dataFixturesController.createAds);
 
 app.listen(port, async () => {
   await dataSource.initialize();

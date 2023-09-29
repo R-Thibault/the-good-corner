@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 export default function Category() {
   const router = useRouter();
   const categoryId = Number(router.query.id);
-  console.log(router.query.id);
+  console.log(router.query);
 
   return (
     <>
