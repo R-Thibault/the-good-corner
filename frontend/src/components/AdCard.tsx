@@ -1,24 +1,65 @@
-import Image from "next/image";
+import styles from "@/components/AdCard.module.css";
+import { API_URL } from "@/config";
+import axios from "axios";
 
-export type AdCardProps = {
-  title: string;
-  imgUrl: string;
-  price: number;
+export type AdType = {
+  id: number;
   link: string;
+  imgUrl: string;
+  title: string;
+  description: string;
+  price: number;
 };
 
-const AdCard = ({ link, imgUrl, title, price }: AdCardProps) => {
+export type AdCardProps = AdType & {
+  onDelete?: () => void;
+};
+
+export function AdCard(props: AdCardProps): React.ReactNode {
+  async function deleteAd() {
+    await axios.delete<AdType>(`${API_URL}/ads/${props.id}`);
+    if (props.onDelete) {
+      props.onDelete();
+    }
+  }
   return (
-    <div className="ad-card-container">
-      <a className="ad-card-link" href={link}>
-        <img className="ad-card-image" src={imgUrl} alt={title} />
-        <div className="ad-card-text">
-          <div className="ad-card-title">{title}</div>
-          <div className="ad-card-price">{price}</div>
+    <div className={styles.adCardContainer}>
+      <article>
+        <figure className={styles.figure}>
+          <img src={props.imgUrl} alt={props.title} />
+        </figure>
+        <div className={styles.adCardBody}>
+          <div className={styles.adCardText}>
+            <div>
+              <h3>{props.title}</h3>
+              <p>{props.description}</p>
+            </div>
+            <div>{props.price} €</div>
+          </div>
+          <div>
+            <a href={props.link}>
+              Details
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className={styles.icon}
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+            </a>
+            {props.onDelete && (
+              <button onClick={deleteAd} className={styles.BtnDelete}>
+                Supprimer
+              </button>
+            )}
+          </div>
         </div>
-      </a>
+      </article>
     </div>
   );
-};
-
-export default AdCard;
+}

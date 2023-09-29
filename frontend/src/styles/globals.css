@@ -1,5 +1,13 @@
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+}
+html {
+  height: 100%;
+}
+#__next {
+  height: 100%;
 }
 
 body {
@@ -104,7 +112,11 @@ h1 {
 }
 
 .main-content {
-  max-width: 832px;
+  height: 100%;
+  display: grid;
+
+  place-items: center;
+  max-width: 65vw;
   padding: 0 16px;
   margin: 120px auto 48px;
 }
@@ -112,35 +124,90 @@ h1 {
 .recent-ads {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  gap: 4vw;
+}
+input[type="number"] {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .ad-card-container {
-  border-radius: 8px;
-  border: 1px solid lightgray;
-  color: inherit;
-  background-color: white;
+  --img-scale: 1.001;
+  --title-color: black;
+  --link-icon-translate: -20px;
+  --link-icon-opacity: 0;
+  position: relative;
+  border-radius: 16px;
+  box-shadow: none;
+  background: #fff;
+  transform-origin: center;
+  transition: all 0.4s ease-in-out;
+  overflow: hidden;
 }
 
-.ad-card-link {
-  text-decoration: inherit;
-  color: inherit;
+.ad-card-container a::after {
+  position: absolute;
+  inset-block: 0;
+  inset-inline: 0;
+  cursor: pointer;
+  content: "";
 }
 
-.ad-card-image {
-  width: 100%;
-  border-radius: 8px;
+.ad-card-container h3 {
+  margin: 0 0 18px 0;
+  font-family: "Bebas Neue", cursive;
+  font-size: 1.9rem;
+  letter-spacing: 0.06em;
+  color: var(--title-color);
+  transition: color 0.3s ease-out;
 }
 
-.ad-card-text {
-  padding: 12px;
-  font-size: 18px;
-  display: flex;
-  justify-content: space-between;
+.figure {
+  margin: 0;
+  padding: 0;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
 }
 
-.ad-card-title {
-  font-weight: bold;
+.ad-card-container img {
+  max-width: 100%;
+  transform-origin: center;
+  transform: scale(var(--img-scale));
+  transition: transform 0.4s ease-in-out;
+}
+
+.ad-card-body {
+  padding: 24px;
+}
+
+.ad-card-container a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: #28666e;
+}
+
+.ad-card-container a:focus {
+  outline: 1px dotted #28666e;
+}
+
+.ad-card-container a .icon {
+  min-width: 24px;
+  width: 24px;
+  height: 24px;
+  margin-left: 5px;
+  transform: translateX(var(--link-icon-translate));
+  opacity: var(--link-icon-opacity);
+  transition: all 0.3s;
+}
+
+.ad-card-container:has(:hover, :focus) {
+  --img-scale: 1.1;
+  --title-color: #28666e;
+  --link-icon-translate: 0;
+  --link-icon-opacity: 1;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
+    rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
 }
 
 .ad-details-image-container {
@@ -155,6 +222,16 @@ h1 {
 .ad-details {
   display: grid;
   gap: 24px;
+}
+
+.title {
+  padding: 5vh;
+}
+
+.btn-submit {
+  border-radius: 10px;
+  background-color: #ffa41b;
+  padding: 10px;
 }
 
 @media screen and (min-width: 720px) {
@@ -196,4 +273,17 @@ h1 {
   height: 1px;
   background-color: lightgray;
   border: none;
+}
+
+.form-fields {
+  margin-top: 10vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.text-field {
+  margin: 4px;
 }

@@ -2,27 +2,68 @@ import { Controller } from ".";
 import { Request, Response } from "express";
 import { Ad } from "../entities/Ad";
 import { validate } from "class-validator";
-import { Like } from "typeorm";
+import { In, LessThanOrEqual, Like, MoreThanOrEqual } from "typeorm";
 
 export class AdsController extends Controller {
   getAll = async (req: Request, res: Response) => {
-    try {
-      const ads = await Ad.find({
-        relations: {
-          category: true,
-          tags: true,
-        },
-      });
-      res.status(200).send(ads);
-    } catch (err) {
-      console.log(err);
-      res.status(404).send("Not Found");
+    // console.log(req);
+    const where: any = {};
+
+    if (typeof req.query.categoryId === "string") {
+      where.category = { id: Number(req.query.categoryId) };
     }
+
+    if (typeof req.query.categoryIn === "string") {
+      where.category = { id: In(req.query.categoryIn.split(",")) };
+    }
+
+    if (typeof req.query.searchTitle === "string") {
+      where.category = Like(`%${req.query.searchTitle}%`);
+    }
+
+    if (typeof req.query.priceGte === "string") {
+      where.category = MoreThanOrEqual(Number(req.query.searchTitle));
+    }
+
+    if (typeof req.query.priceLte === "string") {
+      where.category = LessThanOrEqual(Number(req.query.searchTitle));
+    }
+    const order: any = {};
+    if (
+      typeof req.query.orderByTitle === "string" &&
+      ["ASC", "DESC"].includes(req.query.orderByTitle)
+    ) {
+      order.orderByTitle = req.query.orderByTitle;
+    }
+
+    if (
+      typeof req.query.orderByDate === "string" &&
+      ["ASC", "DESC"].includes(req.query.orderByDate)
+    ) {
+      order.orderByDate = req.query.orderByDate;
+    }
+
+    if (
+      typeof req.query.orderByPrice === "string" &&
+      ["ASC", "DESC"].includes(req.query.orderByPrice)
+    ) {
+      order.orderByPrice = req.query.orderByPrice;
+    }
+
+    const ads = await Ad.find({
+      where,
+      order,
+      relations: {
+        category: true,
+        tags: true,
+      },
+    });
+    res.status(200).json(ads);
   };
 
   getOne = async (req: Request, res: Response) => {
     try {
-      const ad = await Ad.find({
+      const ad = await Ad.findOne({
         relations: {
           category: true,
           tags: true,
@@ -32,7 +73,7 @@ export class AdsController extends Controller {
       res.send(ad);
     } catch (err: any) {
       console.error(err);
-      res.status(500).send();
+      res.status(500).json(err);
     }
   };
 
@@ -41,7 +82,8 @@ export class AdsController extends Controller {
       const newAd = new Ad();
       newAd.title = req.body.title;
       newAd.description = req.body.description;
-      newAd.owner = req.body.owner;
+      newAd.author = req.body.author;
+      newAd.imgUrl = req.body.imgUrl;
       newAd.location = req.body.location;
       newAd.price = req.body.price;
       newAd.category = req.body.category;
@@ -49,13 +91,13 @@ export class AdsController extends Controller {
       const errors = await validate(newAd);
       if (errors.length === 0) {
         await newAd.save();
-        res.status(200).send(newAd);
+        res.status(200).json(newAd);
       } else {
-        throw new Error("Validation failed!");
+        res.status(400).json(errors);
       }
     } catch (err) {
       console.log(err);
-      res.status(404).send("Not Found");
+      res.status(500).send("Good luck !");
     }
   };
 
@@ -66,12 +108,12 @@ export class AdsController extends Controller {
         await ad.remove();
         res.status(204).send();
       } else {
-        res.status(404).send();
+        res.status(404).json();
       }
     } catch (err: any) {
       // typeguards
       console.error(err);
-      res.status(500).send();
+      res.status(500).json(err);
     }
   };
 
@@ -90,11 +132,11 @@ export class AdsController extends Controller {
           res.status(400).json({ errors: errors });
         }
       } else {
-        res.status(404).send("no add");
+        res.status(404).json("no ad");
       }
     } catch (err: any) {
       console.error(err);
-      res.status(500).send();
+      res.status(500).json(err);
     }
   };
 
@@ -116,7 +158,7 @@ export class AdsController extends Controller {
         res.status(200).send(ads);
       } catch (err) {
         console.log(err);
-        res.status(404).send("Not Found");
+        res.status(404).json("Not Found");
       }
     } else if (req.query.location) {
       try {
@@ -133,10 +175,32 @@ export class AdsController extends Controller {
         res.status(200).send(ads);
       } catch (err) {
         console.log(err);
-        res.status(404).send("Not Found");
+        res.status(404).json("Not Found");
       }
     } else if (Object.keys(req.query) !== allowedFields && !req.query) {
-      res.status(404).send("Not Found");
+      res.status(404).json("Not Found");
+    }
+  };
+
+  searchByCat = async (req: Request, res: Response): Promise<void> => {
+    console.log(req);
+    if (req.query.category) {
+      try {
+        const catId = req.query.category;
+        const ads = await Ad.find({
+          relations: {
+            category: true,
+          },
+          where: {
+            category: { id: Number(catId) },
+          },
+        });
+        console.log("Got it !");
+        res.status(200).send(ads);
+      } catch (err) {
+        console.error(err);
+        res.status(500).json(err);
+      }
     }
   };
 }

@@ -5,13 +5,14 @@ import { validate } from "class-validator";
 
 export class CategoriesController extends Controller {
   getAll = async (req: Request, res: Response) => {
-    try {
-      const cats = await Category.find();
-      res.status(200).send(cats);
-    } catch (err) {
-      console.log(err);
-      res.status(404).send("Not Found");
-    }
+    Category.find()
+      .then((categories) => {
+        res.send(categories);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send();
+      });
   };
 
   getOne = async (req: Request, res: Response) => {
@@ -22,7 +23,7 @@ export class CategoriesController extends Controller {
       res.send(cat);
     } catch (err: any) {
       console.error(err);
-      res.status(500).send();
+      res.status(500).json(err);
     }
   };
 
@@ -40,7 +41,7 @@ export class CategoriesController extends Controller {
       }
     } catch (err) {
       console.error(err);
-      res.status(500).send();
+      res.status(500).json(err);
     }
   };
 
@@ -58,7 +59,7 @@ export class CategoriesController extends Controller {
     } catch (err: any) {
       // typeguards
       console.error(err);
-      res.status(500).send();
+      res.status(500).json(err);
     }
   };
 
@@ -82,7 +83,7 @@ export class CategoriesController extends Controller {
       }
     } catch (err: any) {
       console.error(err);
-      res.status(500).send();
+      res.status(500).json(err);
     }
   };
 }

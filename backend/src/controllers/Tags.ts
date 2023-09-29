@@ -22,7 +22,7 @@ export class TagsController extends Controller {
       res.send(tag);
     } catch (err: any) {
       console.error(err);
-      res.status(500).send();
+      res.status(500).json(err);
     }
   };
 
@@ -40,7 +40,7 @@ export class TagsController extends Controller {
       }
     } catch (err) {
       console.error(err);
-      res.status(500).send();
+      res.status(500).json(err);
     }
   };
 
@@ -58,7 +58,7 @@ export class TagsController extends Controller {
     } catch (err: any) {
       // typeguards
       console.error(err);
-      res.status(500).send();
+      res.status(500).json(err);
     }
   };
 
@@ -82,7 +82,7 @@ export class TagsController extends Controller {
       }
     } catch (err: any) {
       console.error(err);
-      res.status(500).send();
+      res.status(500).json(err);
     }
   };
 }

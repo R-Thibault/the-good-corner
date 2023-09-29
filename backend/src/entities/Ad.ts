@@ -23,13 +23,13 @@ export class Ad extends BaseEntity {
   @Column()
   description!: string;
 
-  @Column({ type: "varchar", length: 100 })
-  owner!: string;
+  @Column({ type: "varchar", length: 100, nullable: true })
+  author!: string;
 
-  @Column({ type: "varchar", length: 100 })
-  @Length(1, 100, {
-    message: "Entre 10 et 100 caractères",
-  })
+  @Column({ length: 255 })
+  imgUrl!: string;
+
+  @Column({ type: "varchar", length: 100, nullable: true })
   location!: string;
 
   @Column()

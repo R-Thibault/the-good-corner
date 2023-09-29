@@ -1,60 +1,53 @@
-import AdCard, { AdCardProps } from "./AdCard";
+import { useEffect, useState } from "react";
+import { AdCard, AdCardProps, AdType } from "./AdCard";
+import axios from "axios";
+import { API_URL } from "@/config";
 
-const RecentAds = () => {
-  const ads: AdCardProps[] = [
-    {
-      imgUrl: "/images/table.webp",
-      link: "/ads/table",
-      price: 120,
-      title: "Table",
-    },
-    {
-      imgUrl: "/images/dame-jeanne.webp",
-      link: "/ads/dame-jeanne",
-      price: 75,
-      title: "Dame-jeanne",
-    },
-    {
-      imgUrl: "/images/vide-poche.webp",
-      link: "/ads/vide-poche",
-      price: 4,
-      title: "Vide-poche",
-    },
-    {
-      imgUrl: "/images/vaisselier.webp",
-      link: "/ads/vaisselier",
-      price: 900,
-      title: "Vaisselier",
-    },
-    {
-      imgUrl: "/images/bougie.webp",
-      link: "/ads/bougie",
-      price: 8,
-      title: "Bougie",
-    },
-    {
-      imgUrl: "/images/porte-magazine.webp",
-      link: "/ads/porte-magazine",
-      price: 45,
-      title: "Porte-magazine",
-    },
-  ];
+type RecentAdsProps = {
+  categoryId?: number;
+  searchWord?: string;
+};
+
+export function RecentAds(props: RecentAdsProps): React.ReactNode {
+  const [ads, setAds] = useState([] as AdCardProps[]);
+
+  async function fetchAds() {
+    // be careful here, I'm injected a category ID filter
+    // but it depends on how you implement your filter on your API
+    let url = `${API_URL}/ads?`;
+
+    if (props.categoryId) {
+      url += `categoryIn=${props.categoryId}&`;
+    }
+
+    const result = await axios.get(url);
+    setAds(result.data);
+  }
+
+  useEffect(() => {
+    // mounting
+    fetchAds();
+  }, [props.categoryId]);
+
   return (
     <main className="main-content">
       <h2>Annonces récentes</h2>
+
       <section className="recent-ads">
-        {ads.map((ad) => (
-          <AdCard
-            imgUrl={ad.imgUrl}
-            link={ad.link}
-            price={ad.price}
-            title={ad.title}
-            key={ad.title}
-          />
+        {ads.map((item) => (
+          <div key={item.id}>
+            <AdCard
+              id={item.id}
+              title={item.title}
+              description={item.description}
+              price={item.price}
+              imgUrl={item.imgUrl}
+              link={`/ads/${item.id}`}
+              onDelete={fetchAds}
+            />
+          </div>
         ))}
       </section>
     </main>
   );
-};
-
-export default RecentAds;
+}

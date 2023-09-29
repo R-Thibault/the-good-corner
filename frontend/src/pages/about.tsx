@@ -1,12 +1,11 @@
-import { RecentAds } from "@/components/RecentAds";
 import { Layout } from "@/components/Layout";
 
-export default function Home() {
+export default function About() {
   return (
     <>
-      <Layout title="Home">
+      <Layout title="About">
         <main className="main-content">
-          <RecentAds />
+          <p>Yolo</p>
         </main>
       </Layout>
     </>
