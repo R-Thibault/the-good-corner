@@ -36,6 +36,7 @@ export default function Ad() {
               description={ad.description}
               price={ad.price}
               imgUrl={ad.imgUrl}
+              categoryId={ad.categoryId}
               link={""}
               onDelete={fetchAd}
             />

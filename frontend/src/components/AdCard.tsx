@@ -10,6 +10,7 @@ export type AdType = {
   description: string;
   price: number;
   editLink?: string;
+  categoryId: number;
 };
 
 export type AdCardProps = AdType & {
