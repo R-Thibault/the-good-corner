@@ -1,0 +1,26 @@
+.formContent {
+  display: grid;
+  max-width: 16vw;
+  background-color: lightblue;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  flex-flow: column;
+}
+
+.form input {
+  margin: 4px;
+}
+
+.categoriesDiv {
+  display: flex;
+  flex-direction: column;
+}
+
+.categoriesFields {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}

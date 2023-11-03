@@ -1,11 +1,13 @@
-import { RecentAds } from "@/components/RecentAds";
-import { Layout } from "@/components/Layout";
 import { FormEvent, useEffect, useState } from "react";
 import { CategoryType } from "@/components/Category";
-import axios from "axios";
-import { API_URL } from "@/config";
 import { AdType } from "./AdCard";
 import { useRouter } from "next/router";
+import { useMutation, useQuery } from "@apollo/client";
+import { queryAllCategories } from "@/graphQl/queryAllCategories";
+import { queryAd } from "@/graphQl/queryAd";
+import { mutationCreateAd } from "@/graphQl/mutationCreateAd";
+import { queryAllAds } from "@/graphQl/queryAllAds";
+import { mutationUpdateAd } from "@/graphQl/mutationUpdateAd";
 
 type AdFormData = {
   title: string;
@@ -19,46 +21,34 @@ export type AdFormProps = {
 };
 
 export function AdForm(props: AdFormProps): React.ReactNode {
-  const [categories, setCategories] = useState<CategoryType[]>([]);
-  const [error, setError] = useState<"title" | "price">();
+  const [errors, setErrors] = useState<"title" | "price">();
   const [hasBeenSent, setHasBeenSent] = useState(false);
   const [ad, setAd] = useState<AdType>();
-
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [imgUrl, setImgUrl] = useState("");
   const [price, setPrice] = useState(0);
   const [categoryId, setCategoryId] = useState<null | number>(null);
 
+  const {
+    data: categoryData,
+    error: categoryError,
+    loading: categoryLoading,
+  } = useQuery<{ items: CategoryType[] }>(queryAllCategories);
+
+  const categories = categoryData ? categoryData.items : [];
+
   const router = useRouter();
-  const adId = router.query.id as string;
 
-  async function fetchCategories() {
-    const result = await axios.get<CategoryType[]>(`${API_URL}/categories`);
-    setCategories(result.data);
-  }
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  async function fetchAd() {
-    const result = await axios.get<AdType>(`${API_URL}/ads/${adId}`);
-    console.log(result);
-    setAd(result.data);
-  }
-
-  useEffect(() => {
-    // mounting
-
-    if (adId !== undefined) {
-      fetchAd();
-    }
-  }, []);
-
+  const [doCreate, { loading: loadingCreate }] = useMutation(mutationCreateAd, {
+    refetchQueries: [queryAllAds],
+  });
+  const [doUpdate, { loading: loadingUpdate }] = useMutation(mutationUpdateAd, {
+    refetchQueries: [queryAd, queryAllAds],
+  });
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError(undefined);
+    setErrors(undefined);
     const data: AdFormData = {
       title,
       description,
@@ -68,23 +58,35 @@ export function AdForm(props: AdFormProps): React.ReactNode {
     };
 
     if (data.title.trim().length < 3) {
-      setError("title");
+      setErrors("title");
     } else if (data.price < 0) {
-      setError("price");
+      setErrors("price");
     } else {
       if (!props.ad) {
-        const result = await axios.post(`${API_URL}/ads`, data);
-        if ("id" in result.data) {
-          router.replace(`/ads/${result.data.id}`);
+        const result = await doCreate({
+          variables: {
+            data: data,
+          },
+        });
+        if ("id" in result.data.item) {
+          router.replace(`/ads/${result.data.item.id}`);
         }
       } else {
-        const result = await axios.patch(`${API_URL}/ads/${props.ad.id}`, data);
-        if (result.status >= 200 && result.status < 300) {
+        const result = await doUpdate({
+          variables: {
+            id: props.ad?.id,
+            data: data,
+          },
+        });
+        if (!result.errors?.length) {
           router.replace(`/ads/${props.ad.id}`);
         }
       }
     }
   }
+  useEffect(() => {
+    setCategoryId(categories[0]?.id || null);
+  }, [categories]);
 
   useEffect(() => {
     if (props.ad) {
@@ -92,7 +94,7 @@ export function AdForm(props: AdFormProps): React.ReactNode {
       setDescription(props.ad.description);
       setPrice(props.ad.price);
       setImgUrl(props.ad.imgUrl);
-      setCategoryId(props.ad.categoryId);
+      setCategoryId(props.ad.category ? props.ad.category.id : null);
     }
   }, [props.ad]);
 
@@ -100,8 +102,8 @@ export function AdForm(props: AdFormProps): React.ReactNode {
     <>
       <div className="title">
         <p>{props.ad ? "Modifier l'offre" : "Crée une nouvelle offre"}</p>
-        {error === "price" && <p>Le prix doit être positif</p>}
-        {error === "title" && (
+        {errors === "price" && <p>Le prix doit être positif</p>}
+        {errors === "title" && (
           <p>Le titre est requis et doit faire plus de 3 caractères</p>
         )}
         {hasBeenSent && <p>Offre ajoutée !</p>}
@@ -164,7 +166,7 @@ export function AdForm(props: AdFormProps): React.ReactNode {
           <label>
             Catégorie: <br />
             <select
-              name="category"
+              name="categoryId"
               className="text-field"
               value={categoryId + ""}
               onChange={(e) => setCategoryId(Number(e.target.value))}

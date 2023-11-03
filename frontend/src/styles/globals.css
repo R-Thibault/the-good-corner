@@ -23,6 +23,7 @@ h1 {
 
 .header {
   position: fixed;
+  z-index: 99;
   top: 0;
   left: 0;
   right: 0;
@@ -35,7 +36,7 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   color: #ffa41b;
 }
 
@@ -83,6 +84,7 @@ h1 {
   display: flex;
   flex-grow: 1;
   justify-content: center;
+  align-items: center;
   gap: 4px;
 }
 
@@ -111,20 +113,31 @@ h1 {
   display: none;
 }
 
+.main {
+  display: flex;
+
+  flex-direction: row;
+  margin: 130px auto 48px 6px;
+}
+
 .main-content {
   height: 100%;
   display: grid;
 
   place-items: center;
-  max-width: 65vw;
+  max-width: 95vw;
   padding: 0 16px;
-  margin: 120px auto 48px;
+  margin: 0 auto 48px;
+}
+
+.main-content > h2 {
+  margin-bottom: 20px;
 }
 
 .recent-ads {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 4vw;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 4.5vw;
 }
 input[type="number"] {
   -webkit-appearance: none;

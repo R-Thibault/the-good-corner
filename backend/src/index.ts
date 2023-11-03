@@ -1,52 +1,30 @@
 import "reflect-metadata";
-import express from "express";
-import cors from "cors";
+
 import { dataSource } from "./datasource";
-import { AdsController } from "./controllers/Ads";
-import { CategoriesController } from "./controllers/Categories";
-import { TagsController } from "./controllers/Tags";
-import { DataFixturesController } from "./controllers/DataFixtures";
 
-const app = express();
-const port = 5000;
+import { buildSchema } from "type-graphql";
+import { TagsResolver } from "./resolvers/Tags";
+import { ApolloServer } from "@apollo/server";
+import { startStandaloneServer } from "@apollo/server/standalone";
+import { AdsResolver } from "./resolvers/Ads";
+import { CategorysResolver } from "./resolvers/Categories";
 
-app.use(cors());
-app.use(express.json());
+async function start() {
+  const schema = await buildSchema({
+    resolvers: [TagsResolver, AdsResolver, CategorysResolver],
+  });
 
-//AD
-const adsController = new AdsController();
-app.get("/ads", adsController.getAll);
-app.get("/ads/:id", adsController.getOne);
-app.post("/ads", adsController.createOne);
-app.delete("/ads/:id", adsController.deleteOne);
-app.patch("/ads/:id", adsController.patchOne);
-app.get("/ads/search", adsController.searchWithFilter);
-
-//CATEGORY
-
-const categoriesController = new CategoriesController();
-app.get("/categories", categoriesController.getAll);
-app.get("/categories/:id", categoriesController.getOne);
-app.post("/categories", categoriesController.createOne);
-app.delete("/categories/:id", categoriesController.deleteOne);
-app.patch("/categories/:id", categoriesController.patchOne);
-
-//TAGS
-const tagsController = new TagsController();
-app.get("/tags", tagsController.getAll);
-app.get("/tags/:id", tagsController.getOne);
-app.post("/tags", tagsController.createOne);
-app.delete("/tags/:id", tagsController.deleteOne);
-app.patch("/tags/:id", tagsController.patchOne);
-
-//Data Fixtures
-const dataFixturesController = new DataFixturesController();
-app.post("/categories/many", dataFixturesController.createCategories);
-app.post("/tags/many", dataFixturesController.createTags);
-app.post("/ads/many", dataFixturesController.createAds);
-
-app.listen(port, async () => {
+  const server = new ApolloServer({
+    schema,
+  });
   await dataSource.initialize();
-  console.log(`Example app listening on port ${port}`);
-});
-console.log("Hello, Server is running !");
+  await startStandaloneServer(server, {
+    listen: {
+      port: 5000,
+    },
+  });
+
+  console.log("🚀 Server started!");
+}
+
+start();

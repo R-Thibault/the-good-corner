@@ -1,16 +1,22 @@
 import styles from "@/components/AdCard.module.css";
-import { API_URL } from "@/config";
-import axios from "axios";
+
+import { CategoryType } from "./Category";
+import { TagType } from "./Tag";
+import { useMutation } from "@apollo/client";
+import { queryAllAds } from "@/graphQl/queryAllAds";
+import Link from "next/link";
+import { mutationDeleteAd } from "@/graphQl/mutationDeleteAd";
 
 export type AdType = {
   id: number;
-  link: string;
+  link?: string;
   imgUrl: string;
   title: string;
   description: string;
   price: number;
   editLink?: string;
-  categoryId: number;
+  category: CategoryType | null;
+  tags: TagType[] | null;
 };
 
 export type AdCardProps = AdType & {
@@ -18,8 +24,16 @@ export type AdCardProps = AdType & {
 };
 
 export function AdCard(props: AdCardProps): React.ReactNode {
+  const [doDelete, { data, error, loading }] = useMutation(mutationDeleteAd, {
+    refetchQueries: [queryAllAds],
+  });
+
   async function deleteAd() {
-    await axios.delete<AdType>(`${API_URL}/ads/${props.id}`);
+    await doDelete({
+      variables: {
+        id: props.id,
+      },
+    });
     if (props.onDelete) {
       props.onDelete();
     }
@@ -33,32 +47,34 @@ export function AdCard(props: AdCardProps): React.ReactNode {
         </figure>
         <div className={styles.adCardBody}>
           <div className={styles.adCardText}>
-            <div>
+            <div className={styles.adCardTitle}>
               <h3>{props.title}</h3>
-              <p>{props.description}</p>
+              <span className={styles.cardPrice}>{props.price}€</span>
             </div>
-            <div>{props.price} €</div>
+            <span className={styles.category}>• {props.category?.name}</span>
+            <p>{props.description}</p>
           </div>
-          <div>
-            <a href={props.link} className={styles.btnDetails}>
-              Details
-              {/* <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className={styles.icon}
-                viewBox="0 0 20 20"
-                fill="currentColor"
+          <div className={styles.adCardTags}>
+            {props.tags?.map((item) => (
+              <span key={item.id}># {item.name}</span>
+            ))}
+          </div>
+          <div className={styles.btnDiv}>
+            {props.link && (
+              <button className={styles.btnDetails}>
+                <Link href={props.link} style={{ color: "white" }}>
+                  Details
+                </Link>
+              </button>
+            )}
+            <button className={styles.btnPatch}>
+              <Link
+                href={props.editLink ? props.editLink : ""}
+                style={{ fontWeight: "semi-bold" }}
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg> */}
-            </a>
-
-            <a href={props.editLink} className={styles.btnPatch}>
-              Modifier
-            </a>
+                Modifier
+              </Link>
+            </button>
 
             {props.onDelete && (
               <button onClick={deleteAd} className={styles.btnDelete}>
