@@ -1,37 +1,38 @@
-import { useEffect, useState } from "react";
 import { AdCard, AdCardProps, AdType } from "./AdCard";
-import axios from "axios";
-import { API_URL } from "@/config";
+import { useQuery } from "@apollo/client";
+import { queryAllAds } from "@/graphQl/queryAllAds";
+import router from "next/router";
 
 type RecentAdsProps = {
   categoryId?: number;
   searchWord?: string;
+  searchCategory?: number;
+  searchByTags?: number;
 };
 
 export function RecentAds(props: RecentAdsProps): React.ReactNode {
-  const [ads, setAds] = useState([] as AdCardProps[]);
+  console.log(props);
+  const { data, error, loading } = useQuery<{ items: AdType[] }>(queryAllAds, {
+    variables: {
+      where: {
+        ...(props.categoryId
+          ? {
+              categoriesIn: [props.categoryId],
+            }
+          : {}),
+        ...(props.searchByTags ? { tagsIn: [props.searchByTags] } : {}),
+        ...(props.searchWord ? { searchTitle: props.searchWord } : {}),
+      },
+    },
+  });
+  const ads = data ? data.items : [];
 
-  async function fetchAds() {
-    // be careful here, I'm injected a category ID filter
-    // but it depends on how you implement your filter on your API
-    let url = `${API_URL}/ads?`;
-
-    if (props.categoryId) {
-      url += `categoryIn=${props.categoryId}&`;
-    }
-
-    const result = await axios.get(url);
-    setAds(result.data);
+  function fetchAds() {
+    router.replace("/");
   }
 
-  useEffect(() => {
-    // mounting
-
-    fetchAds();
-  }, [props.categoryId]);
-
   return (
-    <main className="main-content">
+    <div className="main-content">
       <h2>Annonces récentes</h2>
 
       <section className="recent-ads">
@@ -44,12 +45,14 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
               price={item.price}
               imgUrl={item.imgUrl}
               link={`/ads/${item.id}`}
+              category={item.category}
+              tags={item.tags}
               onDelete={fetchAds}
               editLink={`/ads/${item.id}/edit`}
             />
           </div>
         ))}
       </section>
-    </main>
+    </div>
   );
 }

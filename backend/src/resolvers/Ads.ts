@@ -8,6 +8,7 @@ import {
 } from "../entities/Ad";
 import { validate } from "class-validator";
 import { In, LessThanOrEqual, Like, MoreThanOrEqual } from "typeorm";
+import { merge } from "../utils";
 
 @Resolver(Ad)
 export class AdsResolver {
@@ -19,17 +20,17 @@ export class AdsResolver {
     // Define search Fields
     const queryWhere: any = {};
 
-    if (where?.categoryId) {
-      queryWhere.category = { id: Number(where?.categoryId) };
-    }
+    // if (where?.categoryId) {
+    //   queryWhere.category = { id: Number(where?.categoryId) };
+    // }
 
     if (where?.categoriesIn) {
       queryWhere.category = { id: In(where?.categoriesIn) };
     }
 
-    if (where?.tagId) {
-      queryWhere.tags = { id: Number(where?.tagId) };
-    }
+    // if (where?.tagId) {
+    //   queryWhere.tags = { id: Number(where?.tagId) };
+    // }
 
     if (where?.tagsIn) {
       queryWhere.tags = { id: In(where?.tagsIn) };
@@ -83,7 +84,7 @@ export class AdsResolver {
   }
 
   @Query(() => Ad, { nullable: true })
-  async oneAd(@Arg("id", () => [ID]) id: number): Promise<Ad | null> {
+  async oneAd(@Arg("id", () => ID) id: number): Promise<Ad | null> {
     const ad = await Ad.findOne({
       where: { id: id },
       relations: { category: true, tags: true },
@@ -109,30 +110,29 @@ export class AdsResolver {
   }
 
   @Mutation(() => Ad, { nullable: true })
-  async deleteAd(@Arg("id") id: number): Promise<Ad | null> {
+  async deleteAd(@Arg("id", () => ID) id: number): Promise<Ad | null> {
     const ad = await Ad.findOne({
       where: { id: id },
     });
     if (ad) {
       await ad.remove();
-      console.log("ad supprimer");
-      return ad;
-    } else {
-      console.log("Error occured");
-      throw new Error("Error occured");
+
+      ad.id = id;
     }
+    return ad;
   }
 
   @Mutation(() => Ad, { nullable: true })
   async updateAd(
-    @Arg("id") id: number,
-    @Arg("data", () => AdUpdateInput) data: AdUpdateInput
+    @Arg("id", () => ID) id: number,
+    @Arg("data") data: AdUpdateInput
   ): Promise<Ad | null> {
     const ad = await Ad.findOne({
       where: { id: id },
+      relations: { tags: true },
     });
     if (ad) {
-      Object.assign(ad, data);
+      merge(ad, data);
       const errors = await validate(ad);
       if (errors.length === 0) {
         await ad.save();

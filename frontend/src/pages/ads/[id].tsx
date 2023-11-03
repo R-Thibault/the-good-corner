@@ -1,33 +1,29 @@
 import { AdCard, AdType } from "@/components/AdCard";
 import { Layout } from "@/components/Layout";
-import { API_URL } from "@/config";
-import axios from "axios";
+import { queryAd } from "@/graphQl/queryAd";
+import { useQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 
 export default function Ad() {
-  const [ad, setAd] = useState<AdType>();
-
   const router = useRouter();
-  const adId = router.query.id as string;
+  const adId = router.query.id;
 
-  async function fetchAd() {
-    const result = await axios.get<AdType>(`${API_URL}/ads/${adId}`);
-    console.log(result);
-    setAd(result.data);
+  const { data, error, loading } = useQuery<{ item: AdType }>(queryAd, {
+    variables: { id: adId },
+    skip: adId === undefined,
+    fetchPolicy: "network-only",
+  });
+
+  const ad = data ? data.item : null;
+
+  function fetchAd() {
+    router.replace("/");
   }
-
-  useEffect(() => {
-    // mounting
-    if (adId !== undefined) {
-      fetchAd();
-    }
-  }, [adId]);
 
   return (
     <Layout title="Ad">
       <main className="main-content">
-        <p>TEST ID: {router.query.id}</p>
+        <p>TEST ID: {adId}</p>
         {ad ? (
           <>
             <AdCard
@@ -36,9 +32,11 @@ export default function Ad() {
               description={ad.description}
               price={ad.price}
               imgUrl={ad.imgUrl}
-              categoryId={ad.categoryId}
-              link={""}
+              category={ad.category}
+              tags={ad.tags}
+              //link={""}
               onDelete={fetchAd}
+              editLink={`/ads/${ad.id}/edit`}
             />
           </>
         ) : adId ? (

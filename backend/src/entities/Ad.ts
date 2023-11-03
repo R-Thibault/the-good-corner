@@ -11,8 +11,16 @@ import {
 
 import { Category } from "./Category";
 import { Tag } from "./Tag";
-import { Field, ID, InputType, Int, ObjectType } from "type-graphql";
+import {
+  Field,
+  ID,
+  InputType,
+  Int,
+  ObjectType,
+  registerEnumType,
+} from "type-graphql";
 import { ObjectId } from "./ObjectId";
+// import { OrderByEnum } from "./OrderByEnum";
 
 @Entity()
 @ObjectType()
@@ -30,7 +38,7 @@ export class Ad extends BaseEntity {
   description!: string;
 
   @Column({ type: "varchar", length: 100, nullable: true })
-  @Field()
+  @Field({ nullable: true })
   author!: string;
 
   @Column({ length: 255 })
@@ -38,7 +46,7 @@ export class Ad extends BaseEntity {
   imgUrl!: string;
 
   @Column({ type: "varchar", length: 100, nullable: true })
-  @Field()
+  @Field({ nullable: true })
   location!: string;
 
   @Column()
@@ -70,17 +78,17 @@ export class AdCreateInput {
   title!: string;
   @Field()
   description!: string;
-  @Field()
+  @Field({ nullable: true })
   author!: string;
   @Field()
   imgUrl!: string;
-  @Field()
+  @Field({ nullable: true })
   location!: string;
   @Field(() => Int)
   price!: number;
   @Field()
   category!: ObjectId;
-  @Field(() => [ObjectId])
+  @Field(() => [ObjectId], { nullable: true })
   tags!: ObjectId[];
 }
 
@@ -121,6 +129,10 @@ export class AdsWhere {
   @Field({ nullable: true })
   priceLte!: number;
 }
+
+// registerEnumType(OrderByEnum, {
+//   name: "OrderBy",
+// });
 
 @InputType()
 export class AdsOrderBy {

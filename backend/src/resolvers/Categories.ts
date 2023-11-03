@@ -1,4 +1,4 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, ID, Mutation, Query, Resolver } from "type-graphql";
 import { Category, CategoryUpdateInput } from "../entities/Category";
 import { validate } from "class-validator";
 
@@ -14,7 +14,7 @@ export class CategorysResolver {
   }
 
   @Query(() => Category, { nullable: true })
-  async oneCategory(@Arg("id") id: number): Promise<Category | null> {
+  async oneCategory(@Arg("id", () => ID) id: number): Promise<Category | null> {
     const category = await Category.findOne({
       where: { id: id },
       relations: { ads: true },
@@ -38,7 +38,9 @@ export class CategorysResolver {
   }
 
   @Mutation(() => Category, { nullable: true })
-  async deleteCategory(@Arg("id") id: number): Promise<Category | null> {
+  async deleteCategory(
+    @Arg("id", () => ID) id: number
+  ): Promise<Category | null> {
     const category = await Category.findOne({
       where: { id: id },
     });
@@ -51,7 +53,7 @@ export class CategorysResolver {
 
   @Mutation(() => Category, { nullable: true })
   async updateCategory(
-    @Arg("id") id: number,
+    @Arg("id", () => ID) id: number,
     @Arg("data", () => CategoryUpdateInput) data: CategoryUpdateInput
   ): Promise<Category | null> {
     const category = await Category.findOne({
