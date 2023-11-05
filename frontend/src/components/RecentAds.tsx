@@ -2,30 +2,32 @@ import { AdCard, AdCardProps, AdType } from "./AdCard";
 import { useQuery } from "@apollo/client";
 import { queryAllAds } from "@/graphQl/queryAllAds";
 import router from "next/router";
+import { useState } from "react";
 
 type RecentAdsProps = {
   categoryId?: number;
   searchWord?: string;
-  searchCategory?: number;
-  searchByTags?: number;
+  //searchCategory?: number;
+  filterTags?: string;
 };
 
 export function RecentAds(props: RecentAdsProps): React.ReactNode {
-  console.log(props);
-  const { data, error, loading } = useQuery<{ items: AdType[] }>(queryAllAds, {
+  //const [filterTags, setFilterTags] = useState<string[]>([]);
+  //console.log(props.filterTags);
+  const {
+    data: adsData,
+    error,
+    loading,
+  } = useQuery<{ items: AdType[] }>(queryAllAds, {
     variables: {
       where: {
-        ...(props.categoryId
-          ? {
-              categoriesIn: [props.categoryId],
-            }
-          : {}),
-        ...(props.searchByTags ? { tagsIn: [props.searchByTags] } : {}),
+        ...(props.categoryId ? { categoriesIn: [props.categoryId] } : {}),
+        ...(props.filterTags ? { tagsIn: [props.filterTags] } : {}),
         ...(props.searchWord ? { searchTitle: props.searchWord } : {}),
       },
     },
   });
-  const ads = data ? data.items : [];
+  const ads = adsData ? adsData.items : [];
 
   function fetchAds() {
     router.replace("/");

@@ -1,48 +1,59 @@
 import styles from "@/components/SearchForm.module.css";
 import { queryAllCategories } from "@/graphQl/queryAllCategories";
 import { queryAllTags } from "@/graphQl/queryAllTags";
-import { useQuery } from "@apollo/client";
-import React, { useState } from "react";
+import { empty, useQuery } from "@apollo/client";
+import React, { useEffect, useState } from "react";
 import { CategoryType } from "./Category";
 import { TagType } from "./Tag";
-import router from "next/router";
+import router, { useRouter } from "next/router";
 
 export function SearchForm() {
-  const [searchByTags, setSearchByTags] = useState<number>();
-  const {
-    data: categoriesData,
-    error: categoriesError,
-    loading: categoriesLoading,
-  } = useQuery<{ items: CategoryType[] }>(queryAllCategories);
+  const [filterTags, setFilterTags] = useState<string[]>([]);
+  const router = useRouter();
+  // const {
+  //   data: categoriesData,
+  //   error: categoriesError,
+  //   loading: categoriesLoading,
+  // } = useQuery<{ items: CategoryType[] }>(queryAllCategories);
   const {
     data: tagsData,
     error: tagsError,
     loading: tagsLoading,
   } = useQuery<{ items: TagType[] }>(queryAllTags);
-  const categories = categoriesData ? categoriesData.items : [];
+  //const categories = categoriesData ? categoriesData.items : [];
   const tags = tagsData ? tagsData.items : [];
 
-  async function validateForm(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    router.push(`/?searchByTags=${searchByTags}`);
-  }
+  const filterHandler = (event: {
+    target: { checked: any; value: string };
+  }) => {
+    console.log(event.target.value);
+    if (event.target.checked) {
+      setFilterTags([...filterTags, event.target.value]);
+    } else {
+      setFilterTags(
+        filterTags.filter((filterTag) => filterTag !== event.target.value)
+      );
+    }
+  };
+
+  useEffect(() => {
+    router.push(`/?filterTags=${filterTags}`);
+  }, [filterTags]);
+  //console.log(filterTags);
 
   return (
     <div className={styles.formContent}>
-      <form action="" onSubmit={validateForm} className={styles.form}>
-        <div className={styles.categoriesDiv}>
-          <span>Tags</span>
-          <div className={styles.categoriesFields}>
-            {tags.map((tag) => (
-              <React.Fragment key={tag.id}>
-                <label>{tag.name}</label>
-                <input type="checkbox" name={tag.name} value={tag.id} />
-              </React.Fragment>
-            ))}
-          </div>
+      <div className={styles.categoriesDiv}>
+        <span>Tags</span>
+        <div className={styles.categoriesFields}>
+          {tags.map((tag) => (
+            <div key={tag.id}>
+              <label>{tag.name}</label>
+              <input type="checkbox" value={tag.id} onChange={filterHandler} />
+            </div>
+          ))}
         </div>
-        <button>Filtrer</button>
-      </form>
+      </div>
     </div>
   );
 }
