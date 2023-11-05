@@ -7,21 +7,21 @@ import { SearchForm } from "@/components/SearchForm";
 export default function Home() {
   const router = useRouter();
   const [searchWord, setSearchWord] = useState<string>();
-  const [searchCategory, setSearchCategory] = useState<number>();
-  const [searchByTags, setSearchByTags] = useState<number>();
+  // const [searchCategory, setSearchCategory] = useState<number>();
+  const [filterTags, setFilterTags] = useState<string>();
   useEffect(() => {
     if (typeof router.query.searchWord === "string") {
       setSearchWord(router.query.searchWord);
     }
   }, [router.query]);
+  // useEffect(() => {
+  //   if (typeof router.query.searchCategory === "number") {
+  //     setSearchWord(router.query.searchCategory);
+  //   }
+  // }, [router.query]);
   useEffect(() => {
-    if (typeof router.query.searchCategory === "number") {
-      setSearchWord(router.query.searchCategory);
-    }
-  }, [router.query]);
-  useEffect(() => {
-    if (typeof router.query.searchByTags === "number") {
-      setSearchWord(router.query.searchByTags);
+    if (typeof router.query.filterTags === "string") {
+      setFilterTags(router.query.filterTags);
     }
   }, [router.query]);
   return (
@@ -31,8 +31,8 @@ export default function Home() {
           <SearchForm />
           <RecentAds
             searchWord={searchWord}
-            searchCategory={searchCategory}
-            searchByTags={searchByTags}
+            // searchCategory={searchCategory}
+            filterTags={filterTags}
           />
         </main>
       </Layout>
