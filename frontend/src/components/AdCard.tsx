@@ -6,6 +6,7 @@ import { useMutation } from "@apollo/client";
 import { queryAllAds } from "@/graphQl/queryAllAds";
 import Link from "next/link";
 import { mutationDeleteAd } from "@/graphQl/mutationDeleteAd";
+import { Flipped } from "react-flip-toolkit";
 
 export type AdType = {
   id: number;
@@ -40,50 +41,52 @@ export function AdCard(props: AdCardProps): React.ReactNode {
   }
 
   return (
-    <div className={styles.adCardContainer}>
-      <article>
-        <figure className={styles.figure}>
-          <img src={props.imgUrl} alt={props.title} />
-        </figure>
-        <div className={styles.adCardBody}>
-          <div className={styles.adCardText}>
-            <div className={styles.adCardTitle}>
-              <h3>{props.title}</h3>
-              <span className={styles.cardPrice}>{props.price}€</span>
+    <Flipped flipId={props.id}>
+      <div className={styles.adCardContainer}>
+        <article>
+          <figure className={styles.figure}>
+            <img src={props.imgUrl} alt={props.title} />
+          </figure>
+          <div className={styles.adCardBody}>
+            <div className={styles.adCardText}>
+              <div className={styles.adCardTitle}>
+                <h3>{props.title}</h3>
+                <span className={styles.cardPrice}>{props.price}€</span>
+              </div>
+              <span className={styles.category}>• {props.category?.name}</span>
+              <p>{props.description}</p>
             </div>
-            <span className={styles.category}>• {props.category?.name}</span>
-            <p>{props.description}</p>
-          </div>
-          <div className={styles.adCardTags}>
-            {props.tags?.map((item) => (
-              <span key={item.id}># {item.name}</span>
-            ))}
-          </div>
-          <div className={styles.btnDiv}>
-            {props.link && (
-              <button className={styles.btnDetails}>
-                <Link href={props.link} style={{ color: "white" }}>
-                  Details
+            <div className={styles.adCardTags}>
+              {props.tags?.map((item) => (
+                <span key={item.id}># {item.name}</span>
+              ))}
+            </div>
+            <div className={styles.btnDiv}>
+              {props.link && (
+                <button className={styles.btnDetails}>
+                  <Link href={props.link} style={{ color: "white" }}>
+                    Details
+                  </Link>
+                </button>
+              )}
+              <button className={styles.btnPatch}>
+                <Link
+                  href={props.editLink ? props.editLink : ""}
+                  style={{ fontWeight: "semi-bold" }}
+                >
+                  Modifier
                 </Link>
               </button>
-            )}
-            <button className={styles.btnPatch}>
-              <Link
-                href={props.editLink ? props.editLink : ""}
-                style={{ fontWeight: "semi-bold" }}
-              >
-                Modifier
-              </Link>
-            </button>
 
-            {props.onDelete && (
-              <button onClick={deleteAd} className={styles.btnDelete}>
-                Supprimer
-              </button>
-            )}
+              {props.onDelete && (
+                <button onClick={deleteAd} className={styles.btnDelete}>
+                  Supprimer
+                </button>
+              )}
+            </div>
           </div>
-        </div>
-      </article>
-    </div>
+        </article>
+      </div>
+    </Flipped>
   );
 }
