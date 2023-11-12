@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { queryAllAds } from "@/graphQl/queryAllAds";
 import router from "next/router";
 import { useState } from "react";
+import { Flipped, Flipper, spring } from "react-flip-toolkit";
 
 type RecentAdsProps = {
   categoryId?: number;
@@ -13,7 +14,7 @@ type RecentAdsProps = {
 
 export function RecentAds(props: RecentAdsProps): React.ReactNode {
   //const [filterTags, setFilterTags] = useState<string[]>([]);
-  console.log(props);
+  //console.log(props);
   const {
     data: adsData,
     error,
@@ -38,11 +39,11 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
   return (
     <div className="main-content">
       <h2>Annonces récentes</h2>
-
-      <section className="recent-ads">
-        {ads.map((item) => (
-          <div key={item.id}>
+      <Flipper flipKey={ads.join("")} spring="stiff">
+        <section className="recent-ads">
+          {ads.map((item) => (
             <AdCard
+              key={item.id}
               id={item.id}
               title={item.title}
               description={item.description}
@@ -54,9 +55,9 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
               onDelete={fetchAds}
               editLink={`/ads/${item.id}/edit`}
             />
-          </div>
-        ))}
-      </section>
+          ))}
+        </section>
+      </Flipper>
     </div>
   );
 }

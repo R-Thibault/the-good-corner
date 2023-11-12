@@ -194,7 +194,6 @@ input[type="number"] {
 }
 
 .ad-card-container a {
-  display: inline-flex;
   align-items: center;
   text-decoration: none;
   color: #28666e;
