@@ -7,18 +7,18 @@ import { SearchForm } from "@/components/SearchForm";
 export default function Home() {
   const router = useRouter();
   const [searchWord, setSearchWord] = useState<string>();
-  // const [searchCategory, setSearchCategory] = useState<number>();
+  const [filterCategories, setFilterCategories] = useState<string>();
   const [filterTags, setFilterTags] = useState<string>();
   useEffect(() => {
     if (typeof router.query.searchWord === "string") {
       setSearchWord(router.query.searchWord);
     }
   }, [router.query]);
-  // useEffect(() => {
-  //   if (typeof router.query.searchCategory === "number") {
-  //     setSearchWord(router.query.searchCategory);
-  //   }
-  // }, [router.query]);
+  useEffect(() => {
+    if (typeof router.query.filterCategories === "string") {
+      setFilterCategories(router.query.filterCategories);
+    }
+  }, [router.query]);
   useEffect(() => {
     if (typeof router.query.filterTags === "string") {
       setFilterTags(router.query.filterTags);
@@ -31,7 +31,7 @@ export default function Home() {
           <SearchForm />
           <RecentAds
             searchWord={searchWord}
-            // searchCategory={searchCategory}
+            filterCategories={filterCategories}
             filterTags={filterTags}
           />
         </main>
