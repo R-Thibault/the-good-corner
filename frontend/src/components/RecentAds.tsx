@@ -7,13 +7,13 @@ import { useState } from "react";
 type RecentAdsProps = {
   categoryId?: number;
   searchWord?: string;
-  //searchCategory?: number;
+  filterCategories?: string;
   filterTags?: string;
 };
 
 export function RecentAds(props: RecentAdsProps): React.ReactNode {
   //const [filterTags, setFilterTags] = useState<string[]>([]);
-  //console.log(props.filterTags);
+  console.log(props);
   const {
     data: adsData,
     error,
@@ -21,7 +21,9 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
   } = useQuery<{ items: AdType[] }>(queryAllAds, {
     variables: {
       where: {
-        ...(props.categoryId ? { categoriesIn: [props.categoryId] } : {}),
+        ...(props.filterCategories
+          ? { categoriesIn: [props.filterCategories] }
+          : {}),
         ...(props.filterTags ? { tagsIn: [props.filterTags] } : {}),
         ...(props.searchWord ? { searchTitle: props.searchWord } : {}),
       },
