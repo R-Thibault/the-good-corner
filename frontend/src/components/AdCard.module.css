@@ -1,4 +1,5 @@
 .adCardContainer {
+  min-width: 15vw;
   --img-scale: 1.001;
   --title-color: black;
   --link-icon-translate: -20px;
@@ -62,7 +63,7 @@
 }
 
 .adCardContainer a {
-  display: inline-block;
+  display: inline-flex;
   align-items: center;
   text-decoration: none;
   color: #28666e;
