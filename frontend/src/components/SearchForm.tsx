@@ -2,7 +2,12 @@ import styles from "@/components/SearchForm.module.css";
 import { queryAllCategories } from "@/graphQl/queryAllCategories";
 import { queryAllTags } from "@/graphQl/queryAllTags";
 import { empty, useQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, {
+  DetailedHTMLProps,
+  InputHTMLAttributes,
+  useEffect,
+  useState,
+} from "react";
 import { CategoryType } from "./Category";
 import { TagType } from "./Tag";
 import router, { useRouter } from "next/router";
@@ -10,6 +15,7 @@ import router, { useRouter } from "next/router";
 export function SearchForm() {
   const [filterTags, setFilterTags] = useState<string[]>([]);
   const [filterCategories, setFilterCategories] = useState<string[]>([]);
+
   const router = useRouter();
   const {
     data: categoriesData,
@@ -50,13 +56,14 @@ export function SearchForm() {
   };
 
   useEffect(() => {
-    router.push(`/?filterCategories=${filterCategories}`);
-  }, [filterCategories]);
-
-  useEffect(() => {
-    router.push(`/?filterTags=${filterTags}`);
-  }, [filterTags]);
-  //console.log(filterTags);
+    if (filterCategories.length === 0 && filterTags.length === 0) {
+      router.push("/");
+    } else {
+      router.push(
+        `/?filterCategories=${filterCategories}&filterTags=${filterTags}`
+      );
+    }
+  }, [filterCategories, filterTags]);
 
   return (
     <div className={styles.formContent}>
@@ -69,6 +76,7 @@ export function SearchForm() {
               <input
                 aria-label="category"
                 type="checkbox"
+                name="checkboxCategory"
                 value={category.id}
                 onChange={filterHandler}
               />
@@ -84,6 +92,7 @@ export function SearchForm() {
                 aria-label="tag"
                 type="checkbox"
                 value={tag.id}
+                name="checkboxTag"
                 onChange={filterHandler}
               />
             </div>

@@ -1,4 +1,4 @@
-import { Arg, ID, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, ID, Int, Mutation, Query, Resolver } from "type-graphql";
 import {
   Ad,
   AdCreateInput,
@@ -14,23 +14,17 @@ import { merge } from "../utils";
 export class AdsResolver {
   @Query(() => [Ad])
   async allAds(
+    @Arg("take", () => Int, { nullable: true }) take?: number,
+    @Arg("skip", () => Int, { nullable: true }) skip?: number,
     @Arg("where", () => AdsWhere, { nullable: true }) where?: AdsWhere,
     @Arg("orderBy", () => AdsOrderBy, { nullable: true }) orderBy?: AdsOrderBy
   ): Promise<Ad[]> {
     // Define search Fields
     const queryWhere: any = {};
 
-    // if (where?.categoryId) {
-    //   queryWhere.category = { id: Number(where?.categoryId) };
-    // }
-
     if (where?.categoriesIn) {
       queryWhere.category = { id: In(where?.categoriesIn) };
     }
-
-    // if (where?.tagId) {
-    //   queryWhere.tags = { id: Number(where?.tagId) };
-    // }
 
     if (where?.tagsIn) {
       queryWhere.tags = { id: In(where?.tagsIn) };
@@ -73,12 +67,47 @@ export class AdsResolver {
     }
 
     const ads = await Ad.find({
+      take: take ?? 50,
+      skip: skip,
       where: queryWhere,
       order: queryOrderBy,
       relations: {
         category: true,
         tags: true,
       },
+    });
+    return ads;
+  }
+
+  @Query(() => Int)
+  async allAdsCount(
+    @Arg("where", () => AdsWhere, { nullable: true }) where?: AdsWhere
+  ): Promise<number> {
+    // Define search Fields
+    const queryWhere: any = {};
+
+    if (where?.categoriesIn) {
+      queryWhere.category = { id: In(where?.categoriesIn) };
+    }
+
+    if (where?.tagsIn) {
+      queryWhere.tags = { id: In(where?.tagsIn) };
+    }
+
+    if (where?.searchTitle) {
+      queryWhere.title = Like(`%${where?.searchTitle}%`);
+    }
+
+    if (where?.priceGte) {
+      queryWhere.price = MoreThanOrEqual(Number(where?.priceGte));
+    }
+
+    if (where?.priceLte) {
+      queryWhere.price = LessThanOrEqual(Number(where?.priceLte));
+    }
+
+    const ads = await Ad.count({
+      where: queryWhere,
     });
     return ads;
   }

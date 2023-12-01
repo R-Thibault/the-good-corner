@@ -1,5 +1,7 @@
 .adCardContainer {
-  min-width: 15vw;
+  width: 18em;
+
+  max-height: 50em;
   --img-scale: 1.001;
   --title-color: black;
   --link-icon-translate: -20px;
@@ -38,6 +40,7 @@
 .adCardBody {
   display: flex;
   flex-direction: column;
+  align-content: space-evenly;
   padding: 20px;
 }
 
@@ -114,8 +117,9 @@
   z-index: 1;
   margin: 10px 0;
   padding: 6px;
-  background-color: green;
+  background-color: lightblue;
   border-radius: 10px;
+  font-weight: bolder;
   color: white;
 }
 
@@ -125,6 +129,7 @@
   padding: 6px;
   background-color: red;
   border-radius: 10px;
+  font-weight: bolder;
   color: white;
 }
 
