@@ -47,6 +47,14 @@ export function Header(): React.ReactNode {
             </svg>
           </button>
         </form>
+        <Link href="/tags/new" className="button link-button">
+          <span className="mobile-short-label">Publier</span>
+          <span className="desktop-long-label">Publier un tag</span>
+        </Link>
+        <Link href="/categories/new" className="button link-button">
+          <span className="mobile-short-label">Publier</span>
+          <span className="desktop-long-label">Publier une catégorie</span>
+        </Link>
         <Link href="/ads/new" className="button link-button">
           <span className="mobile-short-label">Publier</span>
           <span className="desktop-long-label">Publier une annonce</span>

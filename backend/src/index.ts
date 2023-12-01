@@ -24,7 +24,7 @@ async function start() {
     },
   });
 
-  console.log("🚀 Server started!");
+  console.log("🚀 Server started !");
 }
 
 start();

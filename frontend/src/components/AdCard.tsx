@@ -62,11 +62,9 @@ export function AdCard(props: AdCardProps): React.ReactNode {
               ))}
             </div>
             <div className={styles.btnDiv}>
-              {props.link && (
-                <button className={styles.btnDetails}>
-                  <Link href={props.link} style={{ color: "white" }}>
-                    Details
-                  </Link>
+              {props.onDelete && (
+                <button onClick={deleteAd} className={styles.btnDelete}>
+                  Supprimer
                 </button>
               )}
               <button className={styles.btnPatch}>
@@ -77,10 +75,9 @@ export function AdCard(props: AdCardProps): React.ReactNode {
                   Modifier
                 </Link>
               </button>
-
-              {props.onDelete && (
-                <button onClick={deleteAd} className={styles.btnDelete}>
-                  Supprimer
+              {props.link && (
+                <button className={styles.btnDetails}>
+                  <Link href={props.link}>Details</Link>
                 </button>
               )}
             </div>
