@@ -38,6 +38,15 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
 
   const count = data ? data.count : 0;
   const pagesCount = Math.ceil(count / pageSize);
+  // this function ensure that we do not stay blocked on an empty page due
+  // to a page size change
+  function onPageSizeChange(newValue: number) {
+    const newPagesCount = Math.ceil(count / newValue);
+    if (page >= newPagesCount) {
+      setPage(Math.max(newPagesCount - 1, 0));
+    }
+    setPageSize(newValue);
+  }
 
   function fetchAds() {
     router.replace("/");
@@ -47,6 +56,27 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
     <div className="main-content">
       <h2>Annonces récentes</h2>
       <nav>
+        <p>Nombre de résultats par page ?</p>
+        <div className="setPageSize">
+          <button
+            className="button-primary"
+            onClick={() => onPageSizeChange(8)}
+          >
+            8
+          </button>
+          <button
+            className="button-primary"
+            onClick={() => onPageSizeChange(12)}
+          >
+            12
+          </button>
+          <button
+            className="button-primary"
+            onClick={() => onPageSizeChange(16)}
+          >
+            16
+          </button>
+        </div>
         <button
           disabled={page === 0}
           onClick={() => setPage((prev) => Math.max(prev - 1, 0))}

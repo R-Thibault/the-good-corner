@@ -74,6 +74,15 @@ h1 {
 .logo {
   border: none;
 }
+.setPageSize {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin: 5px 0;
+}
+.button-primary:focus {
+  background-color: #c57f15;
+}
 
 .button-primary {
   border-radius: 10px;
