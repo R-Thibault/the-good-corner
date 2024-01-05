@@ -6,6 +6,7 @@ import {
   Mutation,
   Query,
   Resolver,
+  UseMiddleware,
 } from "type-graphql";
 import { User, UserCreateInput } from "../entities/User";
 import { validate } from "class-validator";
@@ -13,8 +14,10 @@ import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import Cookies from "cookies";
 import { ContextType } from "../auth";
+
 @Resolver(User)
 export class UsersResolver {
+  @Authorized("ADMIN")
   @Query(() => [User])
   async allUsers(): Promise<User[]> {
     const users = await User.find();
@@ -79,7 +82,7 @@ export class UsersResolver {
           },
           process.env.JWT_SECRET || "supersecret"
         );
-        console.log(token);
+        //console.log(token);
         //edit response headers to add set-cookie
         const cookies = new Cookies(context.req, context.res);
         cookies.set("token", token, {
