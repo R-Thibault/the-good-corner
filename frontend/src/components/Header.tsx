@@ -2,20 +2,31 @@ import Link from "next/link";
 import { Category, CategoryType } from "./Category";
 
 import React, { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { queryAllCategories } from "@/graphQl/queryAllCategories";
 import router, { useRouter } from "next/router";
 import { queryMe } from "@/graphQl/queryMe";
+import { mutationSignout } from "@/graphQl/mutationSignout";
+import { UserType } from "@/types";
 
 export function Header(): React.ReactNode {
-  const {
-    data: dataMe,
-    error: errorMe,
-    loading: loadingMe,
-  } = useQuery(queryMe);
+  const { data: meData, loading: loadingMe } = useQuery<{
+    item: UserType | null;
+  }>(queryMe);
+  const me = meData?.item;
   const [displayButton, setDisplayButton] = useState(false);
   const [searchWord, setSearchWord] = useState("");
   const router = useRouter();
+
+  const [doSignout] = useMutation(mutationSignout, {
+    refetchQueries: [queryMe],
+  });
+  const apolloClient = useApolloClient();
+  async function logout() {
+    apolloClient.clearStore();
+    doSignout();
+  }
+
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     router.push(`/?searchWord=${searchWord.trim()}`);
@@ -61,7 +72,7 @@ export function Header(): React.ReactNode {
           </>
         )}
 
-        {errorMe ? (
+        {!me ? (
           <>
             <Link href="/signup" className="button link-button">
               <span className="mobile-short-label">Inscription</span>
@@ -90,7 +101,7 @@ export function Header(): React.ReactNode {
               <span className="mobile-short-label">profil</span>
               <span className="desktop-long-label">Mon profil</span>
             </Link>
-            <button className="button link-button">
+            <button onClick={logout} className="button link-button">
               <span className="mobile-short-label">Deconnexion</span>
               <span className="desktop-long-label">Deconnexion</span>
             </button>

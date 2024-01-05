@@ -98,8 +98,6 @@ export class AdUpdateInput {
   @Field({ nullable: true })
   description!: string;
   @Field({ nullable: true })
-  author!: string;
-  @Field({ nullable: true })
   imgUrl!: string;
   @Field({ nullable: true })
   location!: string;

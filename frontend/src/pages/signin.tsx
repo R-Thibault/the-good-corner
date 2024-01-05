@@ -33,12 +33,12 @@ export default function Signin() {
   return (
     <>
       <Layout title="Connexion">
-        <div className="title">
-          <p>Connexion</p>
-        </div>
-        {error && <p> Une érreur est survenue</p>}
-        {failed && <p>identifiants incorrects</p>}
         <main className="main-content">
+          <div className="title">
+            <p>Connexion</p>
+          </div>
+          {error && <p> Une érreur est survenue</p>}
+          {failed && <p>identifiants incorrects</p>}
           <form onSubmit={onSubmit} className="form-fields">
             <div className="div-field">
               <label htmlFor="">

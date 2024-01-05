@@ -29,11 +29,11 @@ export default function Signup() {
   return (
     <>
       <Layout title="Inscription">
-        <div className="title">
-          <p>Inscription</p>
-        </div>
-        {error && <p> Une érreur est survenue</p>}
         <main className="main-content">
+          <div className="title">
+            <p>Inscription</p>
+          </div>
+          {error && <p> Une érreur est survenue</p>}
           <form onSubmit={onSubmit} className="form-fields">
             <div className="div-field">
               <label htmlFor="">

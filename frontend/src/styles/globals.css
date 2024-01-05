@@ -3,10 +3,11 @@
   padding: 0;
   box-sizing: border-box;
 }
-html {
-  height: 100%;
-}
-#__next {
+html,
+body,
+body > div:first-child,
+div#__next,
+div#__next > div {
   height: 100%;
 }
 
@@ -136,15 +137,20 @@ button[disabled] {
 }
 
 .main {
+  min-height: 100vh;
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
+  justify-content: left;
+
   margin: 130px auto 48px;
 }
 
 .main-content {
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   gap: 1em;
   padding: 0 16px;
