@@ -8,9 +8,17 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Authorized, Field, ID, InputType, ObjectType } from "type-graphql";
+import {
+  Authorized,
+  Field,
+  ID,
+  InputType,
+  ObjectType,
+  UseMiddleware,
+} from "type-graphql";
 import { IsEmail, Matches } from "class-validator";
 import { Ad } from "./Ad";
+import { emailDisplay } from "../emailDisplay";
 
 @Entity()
 @ObjectType()
@@ -19,12 +27,17 @@ export class User extends BaseEntity {
   @Field(() => ID)
   id!: number;
 
+  // @Authorized()
+  // @UseMiddleware(emailDisplay)
   @Column({ type: "varchar", length: 255, unique: true })
   @Field()
   email!: string;
 
   @Column({ type: "varchar", length: 255 })
   hashedPassword!: string;
+
+  @Column({ type: "varchar", length: 100, default: "USER" })
+  role!: string;
 
   @OneToMany(() => Ad, (ad) => ad.createdBy)
   @Field(() => [Ad])

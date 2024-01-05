@@ -7,11 +7,12 @@ export type ContextType = {
   req: any;
   res: any;
   user?: User;
+  role?: string[];
 };
 
 export const customAuthChecker: AuthChecker<ContextType> = async (
   { root, args, context, info },
-  roles
+  roles: string[]
 ) => {
   // Read user from context
   // and check the user's permission against the `roles` argument
@@ -29,8 +30,13 @@ export const customAuthChecker: AuthChecker<ContextType> = async (
     if (typeof payload === "object" && "userId" in payload) {
       const user = await User.findOneBy({ id: payload.userId });
       if (user !== null) {
-        context.user = Object.assign(user, { hashedPassword: undefined });
-        return true;
+        if (roles.length === 0 || roles.includes(user.role)) {
+          context.user = Object.assign(user, { hashedPassword: undefined });
+          return true;
+        } else {
+          console.error("invalid token");
+          return false;
+        }
       } else {
         console.error("invalid token");
         return false;
