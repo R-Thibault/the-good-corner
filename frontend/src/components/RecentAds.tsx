@@ -20,6 +20,10 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
       url += `categoryIn=${props.categoryId}&`;
     }
 
+    if (props.searchWord) {
+      url += `searchTitle=${props.searchWord}&`;
+    }
+
     const result = await axios.get(url);
     setAds(result.data);
   }
@@ -28,7 +32,7 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
     // mounting
 
     fetchAds();
-  }, [props.categoryId]);
+  }, [props.categoryId, props.searchWord]);
 
   return (
     <main className="main-content">
@@ -44,6 +48,8 @@ export function RecentAds(props: RecentAdsProps): React.ReactNode {
               price={item.price}
               imgUrl={item.imgUrl}
               link={`/ads/${item.id}`}
+              category={item.category}
+              tags={item.tags}
               onDelete={fetchAds}
               editLink={`/ads/${item.id}/edit`}
             />

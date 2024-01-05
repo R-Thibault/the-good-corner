@@ -1,5 +1,3 @@
-import { RecentAds } from "@/components/RecentAds";
-import { Layout } from "@/components/Layout";
 import { FormEvent, useEffect, useState } from "react";
 import { CategoryType } from "@/components/Category";
 import axios from "axios";

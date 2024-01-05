@@ -6,7 +6,10 @@ import { In, LessThanOrEqual, Like, MoreThanOrEqual } from "typeorm";
 
 export class AdsController extends Controller {
   getAll = async (req: Request, res: Response) => {
-    // console.log(req);
+    // Comment passer des params à nos controller ? 3 possibilités :
+    // req.params : /ads/:id. Non (car sert à identifier une ressource)
+    // req.body : POST/PUT/PATCH. Non (car ne fonctionne pas sur GET)
+    // req.query : /ads?categoryId=12. Oui
     const where: any = {};
 
     if (typeof req.query.categoryId === "string") {
@@ -18,15 +21,15 @@ export class AdsController extends Controller {
     }
 
     if (typeof req.query.searchTitle === "string") {
-      where.category = Like(`%${req.query.searchTitle}%`);
+      where.title = Like(`%${req.query.searchTitle}%`);
     }
 
     if (typeof req.query.priceGte === "string") {
-      where.category = MoreThanOrEqual(Number(req.query.searchTitle));
+      where.price = MoreThanOrEqual(Number(req.query.priceGte));
     }
 
     if (typeof req.query.priceLte === "string") {
-      where.category = LessThanOrEqual(Number(req.query.searchTitle));
+      where.price = LessThanOrEqual(Number(req.query.priceLte));
     }
     const order: any = {};
     if (

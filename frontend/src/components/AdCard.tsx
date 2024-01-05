@@ -1,6 +1,10 @@
 import styles from "@/components/AdCard.module.css";
 import { API_URL } from "@/config";
 import axios from "axios";
+import { CategoryType } from "./Category";
+import { TagType } from "./Tag";
+
+export type CategoryProps = CategoryType;
 
 export type AdType = {
   id: number;
@@ -10,7 +14,8 @@ export type AdType = {
   description: string;
   price: number;
   editLink?: string;
-  categoryId: number;
+  category: CategoryType | null;
+  tags: TagType[] | null;
 };
 
 export type AdCardProps = AdType & {
@@ -24,7 +29,7 @@ export function AdCard(props: AdCardProps): React.ReactNode {
       props.onDelete();
     }
   }
-
+  //console.log(props);
   return (
     <div className={styles.adCardContainer}>
       <article>
@@ -33,33 +38,29 @@ export function AdCard(props: AdCardProps): React.ReactNode {
         </figure>
         <div className={styles.adCardBody}>
           <div className={styles.adCardText}>
-            <div>
+            <div className={styles.adCardTitle}>
               <h3>{props.title}</h3>
-              <p>{props.description}</p>
+              <span className={styles.cardPrice}>{props.price}€</span>
             </div>
-            <div>{props.price} €</div>
+            <span className={styles.category}>• {props.category?.name}</span>
+            <p>{props.description}</p>
+          </div>
+          <div className={styles.adCardTags}>
+            {props.tags?.map((item) => (
+              <span key={item.id}># {item.name}</span>
+            ))}
           </div>
           <div>
-            <a href={props.link} className={styles.btnDetails}>
-              Details
-              {/* <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className={styles.icon}
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg> */}
-            </a>
-
-            <a href={props.editLink} className={styles.btnPatch}>
-              Modifier
-            </a>
-
+            <button className={styles.btnDetails}>
+              <a href={props.link} style={{ color: "white" }}>
+                Details
+              </a>
+            </button>
+            <button className={styles.btnPatch}>
+              <a href={props.editLink} style={{ fontWeight: "semi-bold" }}>
+                Modifier
+              </a>
+            </button>
             {props.onDelete && (
               <button onClick={deleteAd} className={styles.btnDelete}>
                 Supprimer

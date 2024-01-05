@@ -27,7 +27,6 @@ export default function Ad() {
   return (
     <Layout title="Ad">
       <main className="main-content">
-        <p>TEST ID: {router.query.id}</p>
         {ad ? (
           <>
             <AdCard
