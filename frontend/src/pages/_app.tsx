@@ -28,11 +28,11 @@ function Auth(props: { children: React.ReactNode }) {
   const router = useRouter();
   useEffect(() => {
     if (publicPages.includes(router.pathname) === false) {
-      if (error) {
+      if (!data?.item) {
         router.replace("/signin");
       }
     }
-  }, [router, error]);
+  }, [router, data]);
 
   if (loading) {
     return <p>Chargement</p>;

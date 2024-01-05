@@ -19,6 +19,7 @@ import {
 import { IsEmail, Matches } from "class-validator";
 import { Ad } from "./Ad";
 import { emailDisplay } from "../emailDisplay";
+import { UserPrivateField } from "../utils";
 
 @Entity()
 @ObjectType()
@@ -27,8 +28,8 @@ export class User extends BaseEntity {
   @Field(() => ID)
   id!: number;
 
-  // @Authorized()
-  // @UseMiddleware(emailDisplay)
+  @Authorized()
+  @UseMiddleware(UserPrivateField)
   @Column({ type: "varchar", length: 255, unique: true })
   @Field()
   email!: string;

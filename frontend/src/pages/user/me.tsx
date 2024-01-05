@@ -1,10 +1,12 @@
 import { Layout } from "@/components/Layout";
 import { queryMe } from "@/graphQl/queryMe";
+import { UserType } from "@/types";
 import { useQuery } from "@apollo/client";
 
 export default function Me() {
-  const { data, loading, error } = useQuery(queryMe);
-  const me = data?.item;
+  const { data: meData } = useQuery<{ item: UserType | null }>(queryMe);
+  const me = meData?.item;
+  console.log(me);
   return (
     <>
       <Layout title="Me">
