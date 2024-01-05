@@ -90,9 +90,8 @@ export class UsersResolver {
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 2,
             userId: existingUser.id,
           },
-          process.env.JWT_SECRET || "supersecret"
+          process.env.JWT_SECRET || "secret"
         );
-        //console.log(token);
         //edit response headers to add set-cookie
         const cookies = new Cookies(context.req, context.res);
         cookies.set("token", token, {
