@@ -38,6 +38,12 @@ export function AdForm(props: AdFormProps): React.ReactNode {
 
   const categories = categoryData ? categoryData.items : [];
 
+  useEffect(() => {
+    if (categories.length > 0) {
+      setCategoryId(categories[0].id);
+    }
+  }, [categories]);
+
   const router = useRouter();
 
   const [doCreate, { loading: loadingCreate }] = useMutation(mutationCreateAd, {
@@ -94,9 +100,13 @@ export function AdForm(props: AdFormProps): React.ReactNode {
       setDescription(props.ad.description);
       setPrice(props.ad.price);
       setImgUrl(props.ad.imgUrl);
-      setCategoryId(props.ad.category ? props.ad.category.id : null);
+      setCategoryId(
+        props.ad.category ? props.ad.category.id : categories[0]?.id
+      );
+    } else if (categories.length > 0) {
+      setCategoryId(categories[0].id);
     }
-  }, [props.ad]);
+  }, [props.ad, categories]);
 
   return (
     <>

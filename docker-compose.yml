@@ -1,0 +1,25 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - 5000:5000
+    command: npm run start
+    volumes:
+      - ./backend/src/:/app/src/
+    env_file: ./backend/.env
+  #  frontend:
+  #    build: ./frontend
+  #    ports:
+  #      - 3006:3000
+  #    command: npm run dev
+  #    volumes:
+  #      - ./frontend/src/:/app/src/
+
+  db:
+    image: postgres
+    #restart: always
+    volumes:
+      - /var/lib/postgresql
+    ports:
+      - 5434:5432
+    env_file: .env

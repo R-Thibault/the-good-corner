@@ -5,21 +5,28 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node-dev ./src/index.ts"
+    "start": "tsnd --poll ./src/index.ts"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@apollo/server": "^4.9.5",
+    "@types/cookies": "^0.7.10",
+    "@types/jsonwebtoken": "^9.0.5",
+    "argon2": "^0.31.2",
     "class-validator": "^0.14.0",
+    "cookies": "^0.9.1",
     "graphql": "^16.8.1",
     "graphql-scalars": "^1.22.4",
+    "jsonwebtoken": "^9.0.2",
     "npm": "^10.2.1",
+    "pg": "^8.11.3",
     "reflect-metadata": "^0.1.13",
-    "sqlite3": "^5.1.6",
     "ts-node-dev": "^2.0.0",
     "type-graphql": "^2.0.0-beta.3",
     "typeorm": "^0.3.17"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/cors": "^2.8.17"
+  }
 }

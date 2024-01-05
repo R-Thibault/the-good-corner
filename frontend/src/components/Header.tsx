@@ -1,14 +1,32 @@
 import Link from "next/link";
 import { Category, CategoryType } from "./Category";
 
-import React, { useState } from "react";
-import { useQuery } from "@apollo/client";
+import React, { useEffect, useState } from "react";
+import { useApolloClient, useMutation, useQuery } from "@apollo/client";
 import { queryAllCategories } from "@/graphQl/queryAllCategories";
 import router, { useRouter } from "next/router";
+import { queryMe } from "@/graphQl/queryMe";
+import { mutationSignout } from "@/graphQl/mutationSignout";
+import { UserType } from "@/types";
 
 export function Header(): React.ReactNode {
+  const { data: meData, loading: loadingMe } = useQuery<{
+    item: UserType | null;
+  }>(queryMe);
+  const me = meData?.item;
+  const [displayButton, setDisplayButton] = useState(false);
   const [searchWord, setSearchWord] = useState("");
   const router = useRouter();
+
+  const [doSignout] = useMutation(mutationSignout, {
+    refetchQueries: [queryMe],
+  });
+  const apolloClient = useApolloClient();
+  async function logout() {
+    apolloClient.clearStore();
+    doSignout();
+  }
+
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     router.push(`/?searchWord=${searchWord.trim()}`);
@@ -47,10 +65,60 @@ export function Header(): React.ReactNode {
             </svg>
           </button>
         </form>
-        <Link href="/ads/new" className="button link-button">
-          <span className="mobile-short-label">Publier</span>
-          <span className="desktop-long-label">Publier une annonce</span>
-        </Link>
+
+        {loadingMe && (
+          <>
+            <p>Chargement</p>
+          </>
+        )}
+
+        {!me ? (
+          <>
+            <Link href="/signup" className="button link-button">
+              <span className="mobile-short-label">Inscription</span>
+              <span className="desktop-long-label">Inscription</span>
+            </Link>
+            <Link href="/signin" className="button link-button">
+              <span className="mobile-short-label">Connexion</span>
+              <span className="desktop-long-label">Connexion</span>
+            </Link>
+          </>
+        ) : (
+          <>
+            <Link href="/tags/new" className="button link-button">
+              <span className="mobile-short-label">Tag</span>
+              <span className="desktop-long-label">Publier un tag</span>
+            </Link>
+            <Link href="/categories/new" className="button link-button">
+              <span className="mobile-short-label">Catégorie</span>
+              <span className="desktop-long-label">Publier une catégorie</span>
+            </Link>
+            <Link href="/ads/new" className="button link-button">
+              <span className="mobile-short-label">Annonce</span>
+              <span className="desktop-long-label">Publier une annonce</span>
+            </Link>
+            <Link href="/user/me" className="button link-button">
+              <span className="mobile-short-label">profil</span>
+              <span className="desktop-long-label">Mon profil</span>
+            </Link>
+            <button onClick={logout} className="button link-button">
+              <span className="mobile-short-label">Deconnexion</span>
+              <span className="desktop-long-label">Deconnexion</span>
+            </button>
+          </>
+        )}
+        {/* {errorMe && (
+          <>
+            <Link href="/signup" className="button link-button">
+              <span className="mobile-short-label">Inscription</span>
+              <span className="desktop-long-label">Inscription</span>
+            </Link>
+            <Link href="/signin" className="button link-button">
+              <span className="mobile-short-label">Connexion</span>
+              <span className="desktop-long-label">Connexion</span>
+            </Link>
+          </>
+        )} */}
       </div>
       <nav className="categories-navigation">
         {categories.map((category, index) => (

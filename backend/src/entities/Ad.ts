@@ -20,6 +20,7 @@ import {
   registerEnumType,
 } from "type-graphql";
 import { ObjectId } from "./ObjectId";
+import { User } from "./User";
 // import { OrderByEnum } from "./OrderByEnum";
 
 @Entity()
@@ -36,10 +37,6 @@ export class Ad extends BaseEntity {
   @Column()
   @Field()
   description!: string;
-
-  @Column({ type: "varchar", length: 100, nullable: true })
-  @Field({ nullable: true })
-  author!: string;
 
   @Column({ length: 255 })
   @Field()
@@ -62,6 +59,10 @@ export class Ad extends BaseEntity {
     this.createdAt = new Date();
   }
 
+  @ManyToOne(() => User, (user) => user.ads)
+  @Field(() => User)
+  createdBy!: User;
+
   @ManyToOne(() => Category, (category) => category.ads)
   @Field(() => Category)
   category!: Category;
@@ -78,8 +79,6 @@ export class AdCreateInput {
   title!: string;
   @Field()
   description!: string;
-  @Field({ nullable: true })
-  author!: string;
   @Field()
   imgUrl!: string;
   @Field({ nullable: true })
@@ -99,8 +98,6 @@ export class AdUpdateInput {
   @Field({ nullable: true })
   description!: string;
   @Field({ nullable: true })
-  author!: string;
-  @Field({ nullable: true })
   imgUrl!: string;
   @Field({ nullable: true })
   location!: string;
@@ -114,6 +111,8 @@ export class AdUpdateInput {
 
 @InputType()
 export class AdsWhere {
+  @Field(() => ID, { nullable: true })
+  user!: number;
   @Field(() => [ID], { nullable: true })
   categoriesIn!: number[];
   @Field(() => ID, { nullable: true })
